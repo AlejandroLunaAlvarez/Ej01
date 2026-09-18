@@ -29,7 +29,6 @@ CREATE TABLE `canchas` (
   `nombre` varchar(50) NOT NULL,
   `deporte_id` int NOT NULL,
   `precio_hora` int NOT NULL,
-  `importe` int NOT NULL,
   `techada` tinyint(1) NOT NULL,
   `activa` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
