@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from datetime import time, timezone, timedelta
 
 load_dotenv()
 
@@ -8,6 +9,10 @@ BASE_URL = '/club_api'
 
 # Formato de fecha esperado por la API
 FORMATO_FECHA = '%Y-%m-%d'
+TZ_GMT3 = timezone(timedelta(hours=-3))
+HORA_MINIMA = time(8, 0, 0, 0)
+HORA_MAXIMA = time(23, 0, 0, 0)
+DURACION_MAXIMA_RESERVA = timedelta(hours=3)
 
 DB_HOST     = os.getenv('DB_HOST', 'localhost')
 DB_PORT     = int(os.getenv('DB_PORT', '3306'))
