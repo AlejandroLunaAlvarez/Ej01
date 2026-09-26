@@ -1,6 +1,6 @@
 from datetime import datetime
-import src.repositories.reservas_repository as repo
-from src.validators.reservas_validator import parsear_fecha_iso
+from ..repositories import reservas_repository as repo
+from ..validators.reservas_validator import parsear_fecha_iso
 
 def crear_reserva_service(data):
     # 1. Verificar si existe el socio y si está activo

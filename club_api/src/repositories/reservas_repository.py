@@ -1,4 +1,4 @@
-from src.db import ejecutar_consulta, ejecutar_mutacion
+from ..db import ejecutar_consulta, ejecutar_mutacion
 
 # Consulta un socio y el nombre de su estado
 def obtener_socio_por_id(socio_id):

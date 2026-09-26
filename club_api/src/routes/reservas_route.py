@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
-from src.validators.reservas_validator import validar_cuerpo_crear_reserva
-from src.services.reservas_service import (
+from ..validators.reservas_validator import validar_cuerpo_crear_reserva
+from ..services.reservas_service import (
     crear_reserva_service,
     obtener_reserva_service,
     listar_reservas_service,
