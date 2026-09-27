@@ -2,7 +2,7 @@
 
 - Alejandro Luna
 - Ignacio Arancibia
-- Fabricio 
+- Fabrizio Amado
 - Lautaro Quintana
 - Kiara Ventura
 
