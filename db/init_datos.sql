@@ -54,3 +54,12 @@ INSERT INTO `canchas` (`nombre`, `deporte_id`, `precio_hora`, `techada`, `activa
 ('Cancha Voley Techada 1', 3, 5500, 1, 1),
 ('Cancha Voley Techada 2', 3, 6000, 1, 1),
 ('Cancha Voley Arena (Beach)', 3, 4800, 0, 1);
+
+INSERT INTO `bloqueos` (`cancha_id`, `fecha`, `horario_inicio`, `horario_fin`, `motivo`) VALUES
+(1, '2026-10-05', '08:00:00', '10:00:00', 'Limpieza'),
+(1, '2026-10-05', '14:00:00', '18:00:00', 'Mantenimiento'),
+(2, '2026-10-06', '10:00:00', '12:00:00', 'Reparacion de superficie'),
+(3, '2026-10-07', '08:00:00', '13:00:00', 'Mantenimiento general'),
+(5, '2026-10-08', '16:00:00', '20:00:00', 'Pintura'),
+(6, '2026-10-09', '12:00:00', '18:00:00', 'Limpieza profunda'),
+(10, '2026-10-10', '09:00:00', '17:00:00', 'Reparacion de piso');

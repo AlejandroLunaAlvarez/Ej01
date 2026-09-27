@@ -30,6 +30,7 @@ CREATE TABLE `bloqueos` (
   `fecha` date NOT NULL,
   `horario_inicio` time NOT NULL,
   `horario_fin` time NOT NULL,
+  `motivo` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `cancha_id` (`cancha_id`),
   CONSTRAINT `cancha_id` FOREIGN KEY (`cancha_id`) REFERENCES `canchas` (`id`)

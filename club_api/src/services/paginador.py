@@ -3,7 +3,7 @@ from urllib.parse import urlencode
 import math
 
 
-def paginar_lista(lista, nombre, serializer=None):
+def paginar_lista(lista, serializer=None):
     # Parámetros _limit y _offset (validados)
     _limit = request.args.get("_limit", 10, type=int)
     _offset = request.args.get("_offset", 0, type=int)
@@ -34,8 +34,8 @@ def paginar_lista(lista, nombre, serializer=None):
         return f"{request.base_url}?{urlencode(params)}"
 
     return {
-        nombre : items,
-        "pagination": {
+        "data" : items,
+        "_links": {
             "_limit": _limit,
             "_offset": _offset,
             "pagina": pagina_actual,

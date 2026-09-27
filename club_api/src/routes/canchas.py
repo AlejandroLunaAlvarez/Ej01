@@ -21,7 +21,7 @@ def get_canchas():
     activa = request.args.get("activa")
 
     canchas = listar_canchas(deporte_id, nombre, techada, activa)
-    canchas_paginadas = paginar_lista(canchas, "canchas")
+    canchas_paginadas = paginar_lista(canchas)
     if not canchas:
         return '', 204
 
