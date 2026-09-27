@@ -51,7 +51,7 @@ def buscar_reservas_superpuestas(
     return ejecutar_consulta(sql, datos)
 
 
-# Inserta un nuevo bloqueo en la tabla bloqueos
+# Inserta un nuevo bloqueo
 def crear_bloqueo(
     cancha_id,
     fecha,
@@ -86,14 +86,16 @@ def crear_bloqueo(
 
     return ejecutar_mutacion(sql, datos)
 
+
+# Lista los bloqueos aplicando filtros opcionales
 def listar_bloqueos(id_cancha=None, fecha=None):
     sql = """
         SELECT
             id,
             cancha_id AS id_cancha,
-            DATE_FORMAT(fecha, '%Y-%m-%d') AS fecha,
-            TIME_FORMAT(horario_inicio, '%H:%i:%s') AS hora_inicio,
-            TIME_FORMAT(horario_fin, '%H:%i:%s') AS hora_fin,
+            fecha,
+            CAST(horario_inicio AS CHAR) AS hora_inicio,
+            CAST(horario_fin AS CHAR) AS hora_fin,
             motivo
         FROM bloqueos
     """
@@ -116,14 +118,16 @@ def listar_bloqueos(id_cancha=None, fecha=None):
 
     return ejecutar_consulta(sql, datos)
 
+
+# Busca un bloqueo por su ID
 def obtener_bloqueo_por_id(id_bloqueo):
     sql = """
         SELECT
             id,
             cancha_id AS id_cancha,
-            DATE_FORMAT(fecha, '%Y-%m-%d') AS fecha,
-            TIME_FORMAT(horario_inicio, '%H:%i:%s') AS hora_inicio,
-            TIME_FORMAT(horario_fin, '%H:%i:%s') AS hora_fin,
+            fecha,
+            CAST(horario_inicio AS CHAR) AS hora_inicio,
+            CAST(horario_fin AS CHAR) AS hora_fin,
             motivo
         FROM bloqueos
         WHERE id = :id_bloqueo
@@ -136,6 +140,7 @@ def obtener_bloqueo_por_id(id_bloqueo):
     return ejecutar_consulta(sql, datos)
 
 
+# Elimina un bloqueo por su ID
 def eliminar_bloqueo_por_id(id_bloqueo):
     sql = """
         DELETE FROM bloqueos
