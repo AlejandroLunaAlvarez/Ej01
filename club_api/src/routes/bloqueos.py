@@ -45,7 +45,8 @@ def listar_bloqueos():
         )
         bloqueos_paginados = paginar_lista(bloqueos)
         return jsonify({
-            "bloqueos": bloqueos_paginados
+            "bloqueos": bloqueos_paginados["data"],
+            "_links": bloqueos_paginados["_links"]
         }), 200
 
     except ValueError as e:
