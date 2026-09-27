@@ -5,6 +5,7 @@ from ..services.canchas import (listar_canchas,
                                   eliminar_cancha_por_id,
                                   modificar_parcialmente_cancha,
                                   listar_canchas_disponibles)
+from ..services.paginador import paginar_lista  # Importa la función de paginación
 
 canchas_bp = Blueprint('canchas', __name__)
 
@@ -20,11 +21,11 @@ def get_canchas():
     activa = request.args.get("activa")
 
     canchas = listar_canchas(deporte_id, nombre, techada, activa)
-    
+    canchas_paginadas = paginar_lista(canchas, "canchas")
     if not canchas:
         return '', 204
 
-    return jsonify(canchas)
+    return jsonify(canchas_paginadas)
 
 @canchas_bp.route('/canchas/<id_cancha>', methods=['GET'])
 def get_canchas_id(id_cancha):
