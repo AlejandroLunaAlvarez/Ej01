@@ -29,11 +29,11 @@ INSERT INTO `socios` (`activo`, `nombre`, `apellido`, `email`) VALUES
 (1, 'Clara', 'Benítez', 'clara.benitez@email.com'),
 (1, 'Santino', 'Vargas', 'santino.vargas@email.com'),
 (1, 'Emilia', 'Mendoza', 'emilia.mendoza@email.com'),
-(0, 'Bruno', 'Iglesias', 'bruno.iglesias@email.com'),
-(0, 'Abigail', 'Ríos', 'abigail.rios@email.com'),
-(0, 'Maximiliano', 'Bravo', 'maximiliano.bravo@email.com'),
-(0, 'Jazmín', 'Cabrera', 'jazmin.cabrera@email.com'),
-(0, 'Gonzalo', 'Paz', 'gonzalo.paz@email.com');
+(2, 'Bruno', 'Iglesias', 'bruno.iglesias@email.com'),
+(2, 'Abigail', 'Ríos', 'abigail.rios@email.com'),
+(2, 'Maximiliano', 'Bravo', 'maximiliano.bravo@email.com'),
+(2, 'Jazmín', 'Cabrera', 'jazmin.cabrera@email.com'),
+(2, 'Gonzalo', 'Paz', 'gonzalo.paz@email.com');
 
 
 INSERT INTO `canchas` (`nombre`, `deporte_id`, `precio_hora`, `techada`, `activa`) VALUES

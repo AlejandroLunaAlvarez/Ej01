@@ -4,7 +4,7 @@ USE `CLUB`;
 --
 -- Host: 127.0.0.1    Database: CLUB
 -- ------------------------------------------------------
--- Server version	8.4.11-0ubuntu0.26.04.1
+-- Server version 8.4.11-0ubuntu0.26.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,6 +16,30 @@ USE `CLUB`;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `estados_socios`
+--
+
+DROP TABLE IF EXISTS `estados_socios`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `estados_socios` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `estados_socios`
+--
+
+LOCK TABLES `estados_socios` WRITE;
+/*!40000 ALTER TABLE `estados_socios` DISABLE KEYS */;
+INSERT INTO `estados_socios` VALUES (1, 'Activo'), (2, 'Inactivo');
+/*!40000 ALTER TABLE `estados_socios` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `bloqueos`
@@ -166,11 +190,13 @@ DROP TABLE IF EXISTS `socios`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `socios` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `activo` boolean NOT NULL,
+  `activo` int NOT NULL,
   `nombre` varchar(50) NOT NULL,
   `apellido` varchar(50) NOT NULL,
   `email` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `fk_estado_id` (`activo`),
+  CONSTRAINT `fk_estado_id` FOREIGN KEY (`activo`) REFERENCES `estados_socios` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
