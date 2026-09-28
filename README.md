@@ -33,15 +33,35 @@ Instalar las dependencias:
 
 pip install -r requirements.txt
 
-Crear la base de datos ejecutando el script SQL incluido en el repositorio:
-
-init_db.sql y cargarlo con init_datos.sql 
-
 ## Configuración
 
-Configurar los datos de conexión a MySQL según el entorno local.
+### 1. Variables de entorno
+Copiar .ev.example a un archivo .env y configurar los siguientes valores:
 
-La configuración sensible, como usuario, contraseña y datos de conexión, no debe incluirse en el repositorio.
+```
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=root
+DB_NAME=CLUB
+```
+de acuerdo a como tengas configurado MySQL
+
+### 2. Base de datos con MySQL local
+Con MySQL 8 corriendo localmente y las variables de entorno configuradas correctamente:
+
+1. Cargar el esquema con los deportes integrados
+
+```
+mysql -u "nombre_cargado_en_.env" -p < init_db.sql
+```
+Esto creara la base de datos llamada CLUB con los deportes precargados.
+
+2. Cargar los datos de prueba ejecutando el siguiente comando:
+
+```
+mysql -u "nombre_cargado_en_.env" -p CLUB < init_datos.sql
+```
 
 Antes de ejecutar la aplicación, verificar que:
 
@@ -52,13 +72,29 @@ Las credenciales utilizadas por la aplicación sean correctas.
 
 ## Ejecución
 
-Con el entorno virtual activado, ejecutar desde la raíz del proyecto:
+Con el entorno virtual activado, ejecutar desde la raíz del proyecto el comando:
 
+```
 python -m club_api.app
+```
 
 La API quedará disponible en:
 
 http://127.0.0.1:5000
+
+## Deportes
+
+En este apartado se podran ver los deportes indexados en la base de datos.
+
+### Endpoints
+
+- Metodo: GET
+
+-Endpoint:
+  GET: /deportes
+
+-Descripcion
+  GET: Consulta todos los deportes indexados 
 
 ## Bloqueos por mantenimiento
 

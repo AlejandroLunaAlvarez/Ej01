@@ -1,8 +1,8 @@
 from flask import Flask
-from club_api.src.routes.deportes import deportes_bp
-from club_api.src.routes.reservas_route import reservas_bp
-from club_api.src.routes.canchas import canchas_bp
-from club_api.src.routes.bloqueos import bloqueos_bp
+from src.routes.deportes import deportes_bp
+from src.routes.reservas_route import reservas_bp
+from src.routes.canchas import canchas_bp
+from src.routes.bloqueos import bloqueos_bp
 
 app = Flask(__name__)
 
