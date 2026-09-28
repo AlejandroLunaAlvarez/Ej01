@@ -1,13 +1,14 @@
 from ..repositories.canchas import (obtener_deporte_por_id,
                                          obtener_cancha_por_id,
-                                         obtener_reserva_por_id_cancha)
+                                         obtener_reserva_por_id_cancha,
+                                         obtener_bloqueo_por_id_cancha)
 
 from datetime import datetime
 from ..constants import TZ_GMT3
 
-def validar_obligatorios(campo, tipo_campo: str):
+def validar_obligatorios(campo, nombre_campo: str):
     if campo is None:
-        raise ValueError(f"El campo {tipo_campo} es obligatorio.")
+        raise ValueError(f"El campo {nombre_campo} es obligatorio.")
 
 def validar_nombre(nombre: str) -> str:
     nombre_sin_espacios = nombre.strip()
@@ -36,17 +37,10 @@ def revisar_reservas_cancha(id_cancha: int):
     if reserva:
         raise ValueError(f"La cancha de id: {id_cancha} tiene una o varias reservas.")
 
-
-def validar_techada(techada: bool) -> bool:
-    if techada is None:
-        return False
-    return techada
-
-
-def validar_activa(activa: bool) -> bool:
-    if activa is None:
-        return True
-    return activa
+def revisar_bloqueos_cancha(id_cancha: int):
+    bloqueo = obtener_bloqueo_por_id_cancha(id_cancha)
+    if bloqueo:
+        raise ValueError(f"La cancha de id: {id_cancha} tiene uno o varios bloqueos.")
 
 def parsear_fecha_iso(fecha):
     try:
@@ -55,3 +49,13 @@ def parsear_fecha_iso(fecha):
         raise ValueError("Formato de fecha u hora inválido.")
 
     return fecha_dt
+
+def validar_booleano(booleano, nombre_campo) -> bool:
+    if booleano not in ('true', 'false'):
+        raise ValueError(f"El parámetro {nombre_campo} debe ser true o false.")
+
+    if booleano == 'true':
+        return True
+    
+    return False
+    

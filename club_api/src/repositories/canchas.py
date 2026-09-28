@@ -3,7 +3,7 @@ from datetime import datetime, date, time
 from ..db import ejecutar_consulta, ejecutar_mutacion
 
 def obtener_canchas():
-    sql = 'SELECT * FROM canchas'
+    sql = 'SELECT id, nombre, deporte_id, precio_hora, techada, activa FROM canchas'
     return ejecutar_consulta(sql)
 
 def obtener_canchas_filtros(deporte_id: int = None, nombre: str = None,
@@ -21,13 +21,13 @@ def obtener_canchas_filtros(deporte_id: int = None, nombre: str = None,
 
     if techada is not None:
         condiciones.append('techada = :techada')
-        datos['techada'] = 1 if techada in (True, 1, '1', 'true', 'True') else 0
+        datos['techada'] = techada
 
     if activa is not None:
         condiciones.append('activa = :activa')
-        datos['activa'] = 1 if activa in (True, 1, '1', 'true', 'True') else 0
+        datos['activa'] = activa
 
-    sql = 'SELECT * FROM canchas'
+    sql = 'SELECT id, nombre, deporte_id, precio_hora, techada, activa FROM canchas'
     if condiciones:
         sql += ' WHERE ' + ' AND '.join(condiciones)
 
@@ -37,7 +37,10 @@ def obtener_canchas_activas_libres(fecha_inicio: datetime, fecha_fin: datetime, 
     condiciones_opcionales = []    
     datos = {
         'fecha_inicio': fecha_inicio,
-        'fecha_fin': fecha_fin
+        'fecha_fin': fecha_fin,
+        'fecha': fecha_inicio.date(),
+        'horario_inicio': fecha_inicio.time(),
+        'horario_fin': fecha_fin.time()
     }
 
     if deporte_id is not None:
@@ -46,7 +49,7 @@ def obtener_canchas_activas_libres(fecha_inicio: datetime, fecha_fin: datetime, 
 
     if techada is not None:
         condiciones_opcionales.append('c.techada = :techada')
-        datos['techada'] = 1 if techada in (True, 1, '1', 'true', 'True') else 0
+        datos['techada'] = techada
     
     filtro_opcional = ''
     if condiciones_opcionales:
@@ -60,7 +63,15 @@ def obtener_canchas_activas_libres(fecha_inicio: datetime, fecha_fin: datetime, 
             SELECT r.cancha_id
             FROM reservas r
             WHERE r.fecha_hora_inicio < :fecha_fin
-                AND r.fecha_hora_fin > :fecha_inicio)
+                AND r.fecha_hora_fin > :fecha_inicio
+        )
+        AND c.id NOT IN (
+			SELECT b.cancha_id
+            FROM bloqueos b
+            WHERE b.fecha = :fecha
+                AND b.horario_inicio < :horario_fin
+				AND b.horario_fin > :horario_inicio
+        )
         """
 
     return ejecutar_consulta(sql, datos)
@@ -114,11 +125,11 @@ def update_parcialmente_cancha(id_cancha: int, nombre: str, precio_hora: int, te
 
     if techada is not None:
         condiciones.append('techada = :techada')
-        datos['techada'] = 1 if techada in (True, 1, '1', 'true', 'True') else 0
+        datos['techada'] = techada
 
     if activa is not None:
         condiciones.append('activa = :activa')
-        datos['activa'] = 1 if activa in (True, 1, '1', 'true', 'True') else 0
+        datos['activa'] = activa
 
     if condiciones:
         clausula_set = ', '.join(condiciones)
@@ -135,6 +146,12 @@ def update_parcialmente_cancha(id_cancha: int, nombre: str, precio_hora: int, te
 
 def obtener_reserva_por_id_cancha(id_cancha: int) -> dict:
     sql = 'SELECT id FROM reservas WHERE cancha_id=:id_cancha'
+    dato = { 'id_cancha': id_cancha }
+
+    return ejecutar_consulta(sql, dato)
+
+def obtener_bloqueo_por_id_cancha(id_cancha: int) -> dict:
+    sql = 'SELECT id FROM bloqueos WHERE cancha_id=:id_cancha'
     dato = { 'id_cancha': id_cancha }
 
     return ejecutar_consulta(sql, dato)
