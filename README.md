@@ -538,6 +538,7 @@ Content-Type: application/json
   "techada": true,
   "activa": false
 }
+```
 
 Si la cancha existe, se actualizan los campos correctamente. Caso contrario, la API devuelve 404
 
