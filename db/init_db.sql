@@ -124,30 +124,6 @@ INSERT INTO `estados_reservas` VALUES (1,'Confirmada'),(2,'Finalizada'),(3,'Canc
 UNLOCK TABLES;
 
 --
--- Table structure for table `estados_socios`
---
-
-DROP TABLE IF EXISTS `estados_socios`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `estados_socios` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `estados_socios`
---
-
-LOCK TABLES `estados_socios` WRITE;
-/*!40000 ALTER TABLE `estados_socios` DISABLE KEYS */;
-INSERT INTO `estados_socios` VALUES (1,'Activo'),(2,'No activo');
-/*!40000 ALTER TABLE `estados_socios` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `reservas`
 --
 
@@ -190,13 +166,11 @@ DROP TABLE IF EXISTS `socios`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `socios` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `estado_id` int NOT NULL,
+  `activo` boolean NOT NULL,
   `nombre` varchar(50) NOT NULL,
   `apellido` varchar(50) NOT NULL,
   `email` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_estado_id` (`estado_id`),
-  CONSTRAINT `fk_estado_id` FOREIGN KEY (`estado_id`) REFERENCES `estados_socios` (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
