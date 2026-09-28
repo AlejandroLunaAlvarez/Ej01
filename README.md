@@ -422,3 +422,127 @@ Esta es una función usada para paginar la información recibida de cualquier m�
   Parámetros opcionales:
   - _limit: Es el límite de resultados por página.
   - _offset: Cuantos resultados se saltean antes del primero en pantalla.
+
+
+## Canchas
+
+Se podrán visualizar el listado de canchas, consultar por una cancha en específico, crear una cancha nueva, actualizar parcialmente una existente y consultar la disponibilidad de canchas.
+
+### Endpoints
+
+- Métodos: GET, POST, PATCH Y DELETE.
+
+- Endpoint: GET y POST: /canchas, GET, PATCH y DELETE: /canchas/{id} y GET: canchas/disponibles.
+
+- Descripción: GET: Consulta todas las canchas existentes o las canchas disponibles o una cancha por id.
+
+  POST: Crea una nueva cancha.
+  
+  PATCH: Actualiza parcialmente una cancha existente.
+
+  DELETE: Borra una cancha por id.
+
+
+### Códigos de respuesta
+
+- 200: Consulta o actualización realizada con éxito.
+
+- 201: Creación realizada correctamente.
+
+- 204: Cancha eliminada con éxito, se devuelve una respuesta vacía.
+
+- 400: Datos del cuerpo de la petición incorrectos o inválidos.
+
+- 404: Cancha inexistente.
+
+- 409: La cancha que se quiere eliminar tiene una o varias reservas y/o uno o varios bloqueos.
+
+### Reglas
+
+- El nombre de la cancha no puede quedar vacío después de quitar espacios en sus extremos.
+
+- El deporte que se le asigne a la cancha debe existir.
+
+- El precio debe ser un número entero positivo.
+
+- El deporte asociado no se puede modificar una vez creada la cancha.
+
+- Cambiar el precio no alterará los importes de reservas existentes.
+
+- No se permite eliminar canchas con reservas o bloqueos asignados.
+
+- Al consultar disponibilidad:
+  - La `hora_inicio` debe ser anterior a la `hora_final`.
+  - El intervalo buscado debe durar máximo 3 horas y no puede atravesar la medianoche ni    estar fuera del horario de atención del club.
+
+
+### Ejemplo de creación
+
+```json
+POST /canchas
+Content-Type: application/json
+
+{
+  "nombre": "Cancha exterior 1",
+  "deporte_id": 1,
+  "precio_hora": 1500,
+  "techada": false,
+  "activa": true
+}
+Respuesta exitosa:
+
+{
+  "id": 1,
+  "nombre": "Cancha exterior 1",
+  "deporte_id": 1,
+  "precio_hora": 1500,
+  "techada": false,
+  "activa": true
+}
+```
+
+### Consulta
+
+Se pueden consultar todas las canchas, obtener una por ID o aplicar filtros de búsqueda:
+
+GET /canchas
+
+Cancha por id de la tabla canchas:
+
+GET /canchas/1
+
+Para ver todas las canchas con el id del deporte, con el nombre, si es techada o no o si está activa (también pueden aplicarse a la vez concatenando cada una con &):
+
+GET /canchas?deporte_id=1
+
+GET /canchas?nombre=Cancha exterior 1
+
+GET /canchas?techada=true
+
+GET /canchas?activa=false
+
+Para consultar las canchas disponibles, se pueden aplicar los siguientes filtros:
+ - `fecha`, `hora_inicio` y `hora_fin` (obligatorios).
+ - `deporte_id` y `techada` (opcionales)
+
+GET /canchas/disponibles?fecha=2026-10-24&hora_inicio=18:00:00&hora_fin=20:00:00
+
+Modificación parcial de la cancha por el id:
+
+PATCH /canchas/1
+```json
+Content-Type: application/json
+{
+  "nombre": "Cancha Interior 1",
+  "precio_hora": 1000,
+  "techada": true,
+  "activa": false
+}
+
+Si la cancha existe, se actualizan los campos correctamente. Caso contrario, la API devuelve 404
+
+Para eliminar una cancha:
+
+DELETE /canchas/1
+
+Si la cancha del id especificado no tiene ninguna reserva o bloqueo, esta se elimina con éxito y se devuelve un json vacío.
