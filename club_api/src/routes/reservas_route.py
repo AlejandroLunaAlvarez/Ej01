@@ -1,5 +1,8 @@
 from flask import Blueprint, request, jsonify
-from ..validators.reservas_validator import validar_cuerpo_crear_reserva
+from ..validators.reservas_validator import (
+    validar_cuerpo_crear_reserva,
+    validar_cuerpo_cambiar_estado
+)
 from ..services.reservas_service import (
     crear_reserva_service,
     obtener_reserva_service,
@@ -9,41 +12,49 @@ from ..services.reservas_service import (
 
 reservas_bp = Blueprint('reservas', __name__)
 
-# POST /club_api/reservas - Registrar reserva
+# Endpoint HTTP POST para registrar una nueva reserva
 @reservas_bp.route('/reservas', methods=['POST'])
 def crear_reserva():
     data = request.get_json(silent=True)
-
     error_msg, status_code = validar_cuerpo_crear_reserva(data)
-    respuesta = {"error": error_msg} if error_msg else None
+    if error_msg:
+        return jsonify({"error": error_msg}), status_code
 
-    if not error_msg:
-        respuesta, status_code = crear_reserva_service(data)
-
+    respuesta, status_code = crear_reserva_service(data)
     return jsonify(respuesta), status_code
 
 
-# GET /club_api/reservas/<id> - Obtener una reserva
-@reservas_bp.route('/reservas/<int:id>', methods=['GET'])
-def obtener_reserva(id):
-    respuesta, status_code = obtener_reserva_service(id)
-    return jsonify(respuesta), status_code
-
-
-# GET /club_api/reservas - Listar reservas
+# Endpoint HTTP GET para obtener el listado paginado de reservas
 @reservas_bp.route('/reservas', methods=['GET'])
 def listar_reservas():
-    limit = request.args.get('limit', default=10, type=int)
-    offset = request.args.get('offset', default=0, type=int)
+    try:
+        limit = int(request.args.get('_limit', 10))
+    except (ValueError, TypeError):
+        limit = 10
+
+    try:
+        offset = int(request.args.get('_offset', 0))
+    except (ValueError, TypeError):
+        offset = 0
 
     respuesta, status_code = listar_reservas_service(limit, offset)
     return jsonify(respuesta), status_code
 
 
-# PUT /club_api/reservas/<id>/estado - Cambiar estado
-@reservas_bp.route('/reservas/<int:id>/estado', methods=['PUT'])
-def cambiar_estado_reserva(id):
-    data = request.get_json(silent=True)
+# Endpoint HTTP GET para obtener los detalles de una reserva por su ID
+@reservas_bp.route('/reservas/<int:reserva_id>', methods=['GET'])
+def obtener_reserva(reserva_id):
+    respuesta, status_code = obtener_reserva_service(reserva_id)
+    return jsonify(respuesta), status_code
 
-    respuesta, status_code = cambiar_estado_service(id, data)
+
+# Endpoint HTTP PUT para cambiar el estado de una reserva (cancelar / finalizar)
+@reservas_bp.route('/reservas/<int:reserva_id>/estado', methods=['PUT'])
+def cambiar_estado(reserva_id):
+    data = request.get_json(silent=True)
+    error_msg, status_code = validar_cuerpo_cambiar_estado(data)
+    if error_msg:
+        return jsonify({"error": error_msg}), status_code
+
+    respuesta, status_code = cambiar_estado_service(reserva_id, data)
     return jsonify(respuesta), status_code
