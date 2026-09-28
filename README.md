@@ -75,7 +75,7 @@ Las credenciales utilizadas por la aplicación sean correctas.
 Con el entorno virtual activado, ejecutar desde la raíz del proyecto el comando:
 
 ```
-python -m club_api.app
+flask run
 ```
 
 La API quedará disponible en:
