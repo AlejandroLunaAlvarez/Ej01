@@ -11,8 +11,7 @@ canchas_bp = Blueprint('canchas', __name__)
 
 @canchas_bp.route('/canchas', methods=['GET'])
 def get_canchas():
-    deporte_id_str = request.args.get("deporte_id")
-    deporte_id = int(deporte_id_str) if deporte_id_str else None
+    deporte_id = request.args.get("deporte_id")
 
     nombre = request.args.get("nombre")
 
@@ -20,12 +19,19 @@ def get_canchas():
     
     activa = request.args.get("activa")
 
-    canchas = listar_canchas(deporte_id, nombre, techada, activa)
-    canchas_paginadas = paginar_lista(canchas)
-    if not canchas:
-        return '', 204
+    try:
+        canchas = listar_canchas(deporte_id, nombre, techada, activa)
 
-    return jsonify(canchas_paginadas)
+        if not canchas:
+            return '', 204
+
+        canchas_paginadas = paginar_lista(canchas)
+        return jsonify({
+            "canchas": canchas_paginadas["data"],
+            "_links": canchas_paginadas["_links"]
+        }), 200
+    except ValueError as e:
+        return jsonify({ "error": str(e) }), 400
 
 @canchas_bp.route('/canchas/<id_cancha>', methods=['GET'])
 def get_canchas_id(id_cancha):
@@ -84,7 +90,12 @@ def get_canchas_disponibles():
 
     try:
         canchas = listar_canchas_disponibles(fecha_str, hora_inicio_str, hora_fin_str, deporte_id, techada)
-        return jsonify(canchas), 200
+
+        canchas_paginadas = paginar_lista(canchas)
+        return jsonify({
+            "canchas": canchas_paginadas["data"],
+            "_links": canchas_paginadas["_links"]
+        }), 200
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
 
