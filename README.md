@@ -36,7 +36,7 @@ pip install -r requirements.txt
 ## Configuración
 
 ### 1. Variables de entorno
-Copiar .ev.example a un archivo .env y configurar los siguientes valores:
+Copiar .env.example a un archivo .env y configurar los siguientes valores:
 
 ```
 DB_HOST=localhost
@@ -193,3 +193,120 @@ Si el bloqueo existe, se elimina correctamente. Si no existe, la API devuelve `4
 - Los bloqueos representan períodos de mantenimiento de una cancha.
 - La eliminación de un bloqueo libera nuevamente ese intervalo.
 - Los bloqueos no modifican ni eliminan reservas existentes.
+
+### Socios
+
+Aquí se podrá consultar toda la info de socios
+
+### Modelo 
+
+|--------------|------------|--------------------------------------------------|
+| Campo        | Tipo       | Descipción  				       |
+|--------------|------------|--------------------------------------------------|
+|id	       | int        | Identificador único			       |
+|--------------|------------|--------------------------------------------------|
+|nombre	       | string     | Nombre del Socio. No puede ser vacío	       |
+|--------------|------------|--------------------------------------------------|
+|apellido      | string     | Apellido del socio.			       |
+|--------------|------------|--------------------------------------------------|
+|email	       | string	    | No puede estar duplicado. Se guarda sin espacios |
+|	       |            | en los extremos y en minúsculas.		       |
+|--------------|------------|--------------------------------------------------|
+|activo	       | int	    | Estado del socio. Valor predeterminado = 1       |
+|--------------|------------|--------------------------------------------------|
+
+### Métodos
+
+- GET /socios: Lista los socios paginados.
+	
+   Parámetros opcionales:
+   - nombre: filtra por nombre.
+   - activo: filtra por estado de activo.
+
+   Respuesta (200):
+   {
+    "socios":{
+       "_links": { Info del Paginador },
+       "data":[{
+		"activo": 1,
+		"apellido": "Pérez",
+		"email": "lucia.perez@email.com",
+		"id": 1,
+		"nombre": "Lucía"		
+	      }]
+   }	
+
+- POST /socios: Registra un nuevo socio.
+   
+   Body:
+   {
+    "nombre": "Julian",
+    "email": "julian@email.com"
+   }
+
+   Reglas:
+   - "nombre" e "email"  son obligatorios.
+   - "email" debe tener un formato válido, se guardará en minúsculas y
+     sin espacios a los extremos.
+   - El servidor asigna automáticamente "activo" = 1.
+   - Si el correo existe se devuelve el error 409.
+ 
+   Respuesta (201):
+   {
+     "activo": 1,
+     "apellido": "Quiroga",
+     "email": "facundoquiroga@email.com",
+     "id": 1,
+     "nombre": "Facundo"
+   }
+
+   Errores:
+   400/422: Datos faltantes o inválidos.
+   409: Email duplicado.
+
+- GET /socios/{id}: Busca a un socio por su id.
+
+   Respuesta (200): Devuelve el socio.
+ 
+   Error (404): No existe ningún socio con ese id.
+
+- PATCH /socios/{id}: Actualiza parcialmente "nombre", "email y/o "apellido".
+
+   Body (todos los campos son opcionales):
+   { 
+     "activo": 0
+   }
+
+   Reglas:
+   - Los campos omitidos conservan su valor.
+   - Se aplican las mismas validaciones que en el POST
+     (nombre vacío no válido, email válido y normalizado).
+   - El nuevo correo debe ser único.
+
+   Respuesta (201): Devuelve la información actualizada del socio.
+
+   Errores:
+   400/422: Datos inválidos.
+   404: El socio no existe.
+   409: El email está duplicado.
+   
+### Paginador
+
+Esta es una función usada para paginar la información recibida de cualquier método.
+
+### Modelo
+
+  "_links": {
+    "_first": "http//:127.0.0.1:5000/socios?_limit=10&_offset=0", ## Link del primer resultado
+    "_last": "http//:127.0.0.1:5000/socios?_limit=10&_offset=30", ## Link del último resultado
+    "_limit": 10, ## Límite de resultados por página, 10 por defecto
+    "_next": null, ## Link de la siguiente página, null por defecto
+    "_offset": 0, ## Cuantos resultados se salta, 0 por defecto
+    "_prev": null, ## Link de la página anterior, null por defecto
+    "pagina": 1, ## Página actual, 1 por defecto
+    "total_items": (total de resultados)
+  }
+
+  Parámetros opcionales:
+  - _limit: Es el límite de resultados por página.
+  - _offset: Cuantos resultados se saltean antes del primero en pantalla.
