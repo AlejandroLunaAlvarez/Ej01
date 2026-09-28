@@ -2,10 +2,13 @@ from datetime import datetime
 
 from ..repositories import bloqueos as repo
 from ..repositories.canchas import obtener_cancha_por_id
+
 from ..validators.bloqueos import (
     validar_bloqueo,
+    validar_fecha,
     convertir_hora
 )
+
 from ..constants import TZ_GMT3
 
 
@@ -79,8 +82,17 @@ def crear_bloqueo_service(data):
         "motivo": data["motivo"]
     }
 
+
 def listar_bloqueos_service(id_cancha=None, fecha=None):
-    return repo.listar_bloqueos(id_cancha, fecha)
+
+    if fecha is not None:
+        validar_fecha(fecha)
+
+    return repo.listar_bloqueos(
+        id_cancha,
+        fecha
+    )
+
 
 def eliminar_bloqueo_service(id_bloqueo):
     bloqueo = repo.obtener_bloqueo_por_id(id_bloqueo)
